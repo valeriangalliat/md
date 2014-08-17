@@ -36,13 +36,6 @@ DEFAULT_LAYOUT = '''<!DOCTYPE html>
 </html>
 '''
 
-MARKDOWN_EXTENSIONS = [
-    'extra',
-    'headerid',
-    'smarty',
-    'toc',
-]
-
 
 def file_or_def(arg, default):
     if arg:
@@ -219,23 +212,32 @@ def main():
     config_list.append(resolve_meta(meta, args['<input>']))
     config = merge_config(config_list, parse_config)
 
-    # Extensions configuration
-    extensions = {k: [] for k in MARKDOWN_EXTENSIONS}
+    # Default extensions
+    extensions = [
+        'extra',
+        'headerid',
+        'smarty',
+        'toc',
+    ]
 
-    if 'header_level' in config:
-        extensions['headerid'].append(('level', config['header_level']))
+    if 'smarty' in config and not config['smarty']:
+        extensions.remove('smarty')
 
-    if 'header_anchorlink' in config:
-        extensions['toc'].append(('anchorlink', config['header_anchorlink']))
+    # Extension configurations
+    extension_configs = {k: [] for k in extensions}
 
-    if 'header_permalink' in config:
-        extensions['toc'].append(('permalink', config['header_permalink']))
+    def proxy(name, extension, extension_name):
+        if name in config:
+            tuple = extension_name, config[name]
+            extension_configs[extension].append(tuple)
 
-    if 'toc_title' in config:
-        extensions['toc'].append(('title', config['toc_title']))
+    proxy('header_level', 'headerid', 'level')
+    proxy('header_anchorlink', 'toc', 'anchorlink')
+    proxy('header_permalink', 'toc', 'permalink')
+    proxy('toc_title', 'toc', 'title')
 
-    content = markdown(input, extensions=MARKDOWN_EXTENSIONS,
-                       extension_configs=extensions,
+    content = markdown(input, extensions=extensions,
+                       extension_configs=extension_configs,
                        output_format='html5')
 
     config['content'] = content
