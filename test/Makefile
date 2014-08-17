@@ -20,14 +20,20 @@ title-matter:
 	$(MD) title.md | diff title-expected.html -
 	@echo
 
+ALL += config
+config: force
+	@echo ':: Take config file as argument'
+	$(MD) --config config config.md | diff config-expected.html -
+	@echo
+
 ALL += mdconfig
 mdconfig: force
-	@echo ':: Find `.mdconfig`, use custom layout'
-	cd $@ && $(MD) test.md | diff test-expected.html -
+	@echo ':: Find `.mdconfig` relative to file, use custom layout'
+	$(MD) mdconfig/test.md | diff mdconfig/test-expected.html -
 	@echo
 
 	@echo ':: Merge parent `.mdconfig`, layout relative to final `.mdconfig`'
-	cd $@/nested && $(MD) test.md | diff test-expected.html -
+	$(MD) mdconfig/nested/test.md | diff mdconfig/nested/test-expected.html -
 	@echo
 
 real-all: $(ALL)
