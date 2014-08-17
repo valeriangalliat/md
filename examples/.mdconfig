@@ -1,3 +1,6 @@
+# We don't want to merge any parent configuration
+extend: false
+
 lang: en
 layout: layout.mustache
 
