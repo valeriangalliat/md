@@ -1,4 +1,6 @@
+---
 title: Custom
+---
 
 Hello world!
 ============

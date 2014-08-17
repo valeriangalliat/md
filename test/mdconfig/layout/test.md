@@ -1,5 +1,7 @@
+---
 lang: fr
 layout: ../layout.mustache
+---
 
 Hello world!
 ============

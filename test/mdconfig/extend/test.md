@@ -1,4 +1,6 @@
+---
 extend: false
+---
 
 Hello world!
 ============
