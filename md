@@ -76,7 +76,7 @@ def resolve_parent_config(dir, config_list=None):
 
     if not config_list:
         config_list = []
-    elif 'extend' not in config_list[0] or not config_list[0]['extend']:
+    elif 'extend' in config_list[0] and not config_list[0]['extend']:
         return config_list
 
     try:
@@ -185,7 +185,7 @@ def main():
     md = Markdown(extensions=MARKDOWN_EXTENSIONS)
     content = md.convert(input)
 
-    meta = {k: v[0] for k, v in md.Meta.items()}
+    meta = {k: yaml.load(v[0]) for k, v in md.Meta.items()}
 
     if 'dir' not in meta:
         if args['<input>']:
@@ -193,9 +193,12 @@ def main():
         else:
             meta['dir'] = os.getcwd()
 
-    config_list = resolve_config(args['--config'], args['<input>'])
-    config_list.append(meta)
+    if 'extend' in meta and not meta['extend']:
+        config_list = []
+    else:
+        config_list = resolve_config(args['--config'], args['<input>'])
 
+    config_list.append(meta)
     config = merge_config(config_list, parse_config)
     config['content'] = content
 
