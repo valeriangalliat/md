@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>None</title>
+  <title>Hello world!</title>
+  <link href="css/code.css" rel="stylesheet">
   <style>
 
     h1 > .headerlink,
@@ -21,6 +22,10 @@
     h5:hover > .headerlink,
     h6:hover > .headerlink {
       visibility: visible;
+    }
+
+    .codehilitetable pre {
+      margin: 0;
     }
 
   </style>
@@ -44,10 +49,13 @@ the family Rosaceae.</dd>
 <dd>The fruit of an evergreen tree of the genus Citrus.</dd>
 </dl>
 <h3 id="code-blocks">Code blocks<a class="headerlink" href="#code-blocks" title="Permanent link">&para;</a></h3>
-<pre><code class="python"># This line is emphasized
-# This line isn't
-# This line is emphasized
-</code></pre>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="codehilite"><pre><span class="hll"><span class="c"># This line is emphasized</span>
+</span><span class="c"># This line isn&#39;t</span>
+<span class="hll"><span class="c"># This line is emphasized</span>
+</span></pre></div>
+</td></tr></table>
 
 <p>Other syntaxes <a href="https://pythonhosted.org/Markdown/extensions/fenced_code_blocks.html">are supported</a>.</p>
 <h3 id="footnotes">Footnotes<a class="headerlink" href="#footnotes" title="Permanent link">&para;</a></h3>

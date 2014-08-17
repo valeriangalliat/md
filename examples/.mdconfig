@@ -1,6 +1,12 @@
 lang: en
 layout: layout.mustache
 
+# Highlight code blocks
+codehilite: true
+
+# Always display lines
+codehilite_linenums: true
+
 # Markdown headers will behin at level 2
 header_level: 2
 
