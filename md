@@ -82,7 +82,7 @@ def resolve_parent_config(dir, config_list=None):
     try:
         path = dir + '/.mdconfig'
         parent = yaml.load(open(path, 'r'))
-        parent['path'] = path
+        parent['dir'] = os.path.dirname(path)
         config_list.insert(0, parent)
     except FileNotFoundError:
         pass
@@ -172,8 +172,7 @@ def parse_config(config):
     '''
 
     if 'layout' in config:
-        dir = os.path.dirname(config['path'])
-        config['layout'] = dir + '/' + config['layout']
+        config['layout'] = config['dir'] + '/' + config['layout']
 
     return config
 
@@ -181,21 +180,25 @@ def parse_config(config):
 def main():
     args = docopt(__doc__, version='1.0')
 
-    config_list = resolve_config(args['--config'], args['<input>'])
-    config = merge_config(config_list, parse_config)
 
     input = file_or_def(args['<input>'], sys.stdin).read()
 
     md = Markdown(extensions=MARKDOWN_EXTENSIONS)
-    config['content'] = md.convert(input)
+    content = md.convert(input)
 
-    meta = md.Meta
+    meta = {k: v[0] for k, v in md.Meta.items()}
 
-    if 'title' in meta:
-        meta['title'] = meta['title'][0]
+    if 'dir' not in meta:
+        if args['<input>']:
+            meta['dir'] = os.path.abspath(os.path.dirname(args['<input>']))
+        else:
+            meta['dir'] = os.getcwd()
 
-    # Merge meta and config
-    config = dict(list(meta.items()) + list(config.items()))
+    config_list = resolve_config(args['--config'], args['<input>'])
+    config_list.append(meta)
+
+    config = merge_config(config_list, parse_config)
+    config['content'] = content
 
     if 'title' not in config:
         config['title'] = TitleFinder().feed(config['content'])
