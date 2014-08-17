@@ -6,15 +6,20 @@
 Overview
 --------
 
-`md` is a wrapper around the Python `markdown` module and extensions,
+`md` is a wrapper around the Python `markdown` module and [extensions],
 to add a layout around the rendered file, with different levels of
 configuration.
 
+[extensions]: https://pythonhosted.org/Markdown/extensions/
+
 ### Configuration
 
-A local configuration is the Markdown [meta-data], also known as YAML
+A local configuration is the Markdown meta-data, also known as YAML
 front matter. It is always merged with the global configuration, unless
 `extend: false` is set.
+
+The meta-data is processed as pure YAML and wrapped with `---` above
+and below. It is not parsed with the [meta-data extension][meta-data].
 
 [meta-data]: https://pythonhosted.org/Markdown/extensions/meta_data.html
 
@@ -35,7 +40,9 @@ search for a `<h1>` and use its content in `<title>`.
 
 The layout can be defined in a `layout` key, targeting a [Mustache] file
 relative to the configuration file (or the Markdown file if in the
-meta-data).
+meta-data). If you set it to `default`, the default layout is used
+(thus overriding any parent `layout` without needing to stop the extend
+chain).
 
 [Mustache]: https://mustache.github.io/
 
@@ -47,3 +54,14 @@ Dependencies
   * `markdown` <https://pypi.python.org/pypi/Markdown>
   * `yaml` <https://pypi.python.org/pypi/PyYAML>
   * `pystache` <https://pypi.python.org/pypi/pystache>
+
+Installation
+------------
+
+Just put the `md` standalone executable in your `PATH` after installing
+the required dependencies.
+
+Examples
+--------
+
+Watch the [`examples`](examples) directory.
