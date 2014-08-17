@@ -131,6 +131,7 @@ class TitleFinder(HTMLParser):
     def feed(self, *args, **kwargs):
         self.title = False
         self.data = None
+        self.tag = None
 
         try:
             super().feed(*args, **kwargs)
@@ -140,16 +141,17 @@ class TitleFinder(HTMLParser):
         return self.data
 
     def handle_starttag(self, tag, attrs):
-        if tag == 'h1':
+        if len(tag) == 2 and tag[0] == 'h':
             self.title = True
             self.data = ''
+            self.tag = tag
 
     def handle_data(self, data):
         if self.title:
             self.data += data
 
     def handle_endtag(self, tag):
-        if tag == 'h1':
+        if tag == self.tag:
             raise StopParse()
 
 
@@ -223,6 +225,9 @@ def main():
     if 'smarty' in config and not config['smarty']:
         extensions.remove('smarty')
 
+    if 'codehilite' in config and config['codehilite']:
+        extensions.append('codehilite')
+
     # Extension configurations
     extension_configs = {k: [] for k in extensions}
 
@@ -231,6 +236,7 @@ def main():
             tuple = extension_name, config[name]
             extension_configs[extension].append(tuple)
 
+    proxy('codehilite_linenums', 'codehilite', 'linenums')
     proxy('header_level', 'headerid', 'level')
     proxy('header_anchorlink', 'toc', 'anchorlink')
     proxy('header_permalink', 'toc', 'permalink')
