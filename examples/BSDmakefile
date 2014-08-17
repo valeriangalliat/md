@@ -1,0 +1,11 @@
+MD = ../md
+
+MARKDOWNS != find . -name '*.md'
+HTMLS = $(MARKDOWNS:.md=.html)
+
+all: $(HTMLS)
+
+.SUFFIXES: .html .md
+
+.md.html:
+	$(MD) $< > $@

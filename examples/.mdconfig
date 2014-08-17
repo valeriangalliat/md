@@ -1,0 +1,11 @@
+lang: en
+layout: layout.mustache
+
+# Markdown headers will behin at level 2
+header_level: 2
+
+# Headers links to themselves
+# header_anchorlink: true
+
+# Add a permalink after headers (only on hover with current layout)
+header_permalink: true
