@@ -9,3 +9,6 @@ header_level: 2
 
 # Add a permalink after headers (only on hover with current layout)
 header_permalink: true
+
+# Title of the table of contents
+# toc_title: Custom title
