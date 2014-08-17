@@ -180,7 +180,6 @@ def parse_config(config):
 def main():
     args = docopt(__doc__, version='1.0')
 
-
     input = file_or_def(args['<input>'], sys.stdin).read()
 
     md = Markdown(extensions=MARKDOWN_EXTENSIONS)
