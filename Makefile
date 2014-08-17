@@ -4,6 +4,6 @@ lint:
 	pep8 md
 
 test: force
-	cd $@ && $(MAKE)
+	$(MAKE) -C $@
 
 force:
