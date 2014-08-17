@@ -10,7 +10,7 @@ codehilite: true
 # Always display lines
 codehilite_linenums: true
 
-# Markdown headers will behin at level 2
+# Markdown headers will begin at level 2
 header_level: 2
 
 # Headers links to themselves
