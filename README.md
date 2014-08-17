@@ -34,7 +34,7 @@ The HTML `<title>` can be provided directly with a `title` configuration
 key in the Markdown meta-data, or even in the global configuration,
 
 If no title is found this way, `md` will parse the rendered HTML to
-search for a `<h1>` and use its content in `<title>`.
+search for the first header and use its content in `<title>`.
 
 ### Layout
 
