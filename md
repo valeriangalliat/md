@@ -163,7 +163,10 @@ def parse_config(config):
     '''
 
     if 'layout' in config:
-        config['layout'] = config['_dir'] + '/' + config['layout']
+        if config['layout'] == 'default':
+            config['layout'] = None
+        else:
+            config['layout'] = config['_dir'] + '/' + config['layout']
 
     return config
 
@@ -232,7 +235,7 @@ def main():
     extension_configs = {k: [] for k in extensions}
 
     def proxy(name, extension, extension_name):
-        if name in config:
+        if name in config and extension in extension_configs:
             tuple = extension_name, config[name]
             extension_configs[extension].append(tuple)
 
@@ -254,9 +257,6 @@ def main():
     if args['--layout']:
         config['layout'] = args['--layout']
     elif 'layout' not in config:
-        config['layout'] = None
-
-    if config['layout'] == 'default':
         config['layout'] = None
 
     layout = file_or_def_io(config['layout'], DEFAULT_LAYOUT).read()
