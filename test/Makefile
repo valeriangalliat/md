@@ -36,6 +36,12 @@ mdconfig: force
 	$(MD) mdconfig/nested/test.md | diff mdconfig/nested/test-expected.html -
 	@echo
 
+ALL += layout
+layout: force
+	@echo ':: Layout defined in Markdown'
+	$(MD) layout/test.md | diff layout/test-expected.html -
+	@echo
+
 real-all: $(ALL)
 
 force:
