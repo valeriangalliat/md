@@ -59,24 +59,79 @@ def file_or_def_io(arg, default):
     return file_or_def(arg, StringIO(default))
 
 
-def resolve_config(config):
-    if config:
-        return open(config, 'r')
+def resolve_parent_config(dir, config_list=None):
+    '''Resolve parent configuration from start directory.
 
-    dir = os.getcwd()
-    isroot = False
+    It will return a list of config objects, from parent to child.
 
-    while not isroot:
-        isroot = dir == '/'
+    Each config object is added a `path` key that contains the
+    config path.
 
-        try:
-            return yaml.load(open(dir + '/.mdconfig', 'r'))
-        except FileNotFoundError:
-            pass
+    The `config_list` is an accumulator. You can put a config in it
+    so the function will check whether to search for parent
+    configurations according to the `extend` value.
+    '''
 
-        dir = os.path.dirname(dir)
+    dir = os.path.abspath(dir)
 
-    return {}
+    if not config_list:
+        config_list = []
+    elif 'extend' not in config_list[0] or not config_list[0]['extend']:
+        return config_list
+
+    try:
+        path = dir + '/.mdconfig'
+        parent = yaml.load(open(path, 'r'))
+        parent['path'] = path
+        config_list.insert(0, parent)
+    except FileNotFoundError:
+        pass
+
+    if dir == '/':
+        return config_list
+
+    return resolve_parent_config(os.path.dirname(dir), config_list)
+
+
+def resolve_config(config_file, markdown_file):
+    '''Resolve configuration from context.
+
+    If there is a `config_file`, read it and all the eventual parent
+    `.mdconfig` while `extend` is `True` to create the config object.
+
+    Otherwise, try to find any parent `.mdconfig` of `markdown_file`
+    with the same rules.
+
+    If there is no `markdown_file` either, the CWD is used to search
+    for configuration (see `resolve_parent_config`).
+    '''
+
+    if not config_file:
+        dir = os.path.dirname(markdown_file) if markdown_file else os.getcwd()
+        return resolve_parent_config(dir)
+
+    config = yaml.load(open(config_file, 'r'))
+    return resolve_parent_config(os.path.dirname(config_file), [config])
+
+
+def merge_config(config_list, parse_config):
+    '''Merge a config list.
+
+    `parse_config` is a callback to modify a config object on the fly.
+    '''
+
+    if not len(config_list):
+        return {}
+
+    if not parse_config:
+        parse_config = lambda x: x
+
+    config = list(parse_config(config_list.pop(0)).items())
+
+    for i in config_list:
+        config += list(parse_config(i).items())
+
+    return dict(config)
 
 
 class StopParse(Exception):
@@ -109,9 +164,26 @@ class TitleFinder(HTMLParser):
             raise StopParse()
 
 
+def parse_config(config):
+    '''Parse a config object.
+
+    Some known config keys like `layout` are resolved according to the
+    config `path` valud.
+    '''
+
+    if 'layout' in config:
+        dir = os.path.dirname(config['path'])
+        config['layout'] = dir + '/' + config['layout']
+
+    return config
+
+
 def main():
     args = docopt(__doc__, version='1.0')
-    config = resolve_config(args['--config'])
+
+    config_list = resolve_config(args['--config'], args['<input>'])
+    config = merge_config(config_list, parse_config)
+
     input = file_or_def(args['<input>'], sys.stdin).read()
 
     md = Markdown(extensions=MARKDOWN_EXTENSIONS)
