@@ -50,7 +50,7 @@ Dependencies
 ------------
 
 * `python3`
-  * `docopt` <https://pypi.python.org/pypi/docopt2>
+  * `docopt` <https://pypi.python.org/pypi/docopt>
   * `markdown` <https://pypi.python.org/pypi/Markdown>
   * `yaml` <https://pypi.python.org/pypi/PyYAML>
   * `pystache` <https://pypi.python.org/pypi/pystache>
