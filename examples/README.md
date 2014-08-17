@@ -13,5 +13,5 @@ raw Markdown source to understand what's going on.
 * [`nested/.mdconfig`](nested/.mdconfig): Extend the parent configuration
   and override a value. [`nested/test.md`](nested/test.md) is rendered
   in consequence.
-* [`no-extend.md`]: Do not extend the parent configuration.
-* [`no-layout.md`]: Reset the default layout.
+* [`no-extend.md`](no-extend.md): Do not extend the parent configuration.
+* [`no-layout.md`](no-layout.md): Reset the default layout.
