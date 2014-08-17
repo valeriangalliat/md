@@ -21,7 +21,7 @@ import yaml
 from docopt import docopt
 from html.parser import HTMLParser
 from io import StringIO
-from markdown import Markdown
+from markdown import markdown
 
 
 DEFAULT_LAYOUT = '''<!DOCTYPE html>
@@ -31,9 +31,6 @@ DEFAULT_LAYOUT = '''<!DOCTYPE html>
 <title>{{title}}</title>
 </head>
 <body>
-{{#h1}}
-<h1>{{title}}</h1>
-{{/h1}}
 {{{content}}}
 </body>
 </html>
@@ -42,7 +39,6 @@ DEFAULT_LAYOUT = '''<!DOCTYPE html>
 MARKDOWN_EXTENSIONS = [
     'extra',
     'headerid',
-    'meta',
     'smarty',
     'toc',
 ]
@@ -82,7 +78,7 @@ def resolve_parent_config(dir, config_list=None):
     try:
         path = dir + '/.mdconfig'
         parent = yaml.load(open(path, 'r'))
-        parent['dir'] = os.path.dirname(path)
+        parent['_dir'] = os.path.dirname(path)
         config_list.insert(0, parent)
     except FileNotFoundError:
         pass
@@ -172,34 +168,76 @@ def parse_config(config):
     '''
 
     if 'layout' in config:
-        config['layout'] = config['dir'] + '/' + config['layout']
+        config['layout'] = config['_dir'] + '/' + config['layout']
 
     return config
+
+
+def extract_meta(input):
+    '''Extract front matter from Markdown input.
+
+    Return a tuple containing the input without front matter
+    and the parsed YAML data.
+    '''
+
+    if input[0:4] != '---\n':
+        return input, {}
+
+    parts = input[4:].split('\n---\n', 2)
+
+    if len(parts) != 2:
+        return parts[0], {}
+
+    return parts[1], yaml.load(parts[0])
+
+
+def resolve_meta(meta, input):
+    '''Resolve the meta directory.
+
+    If given input file name is `None`, use the CWD.
+    '''
+
+    if input:
+        meta['_dir'] = os.path.abspath(os.path.dirname(input))
+    else:
+        meta['_dir'] = os.getcwd()
+
+    return meta
 
 
 def main():
     args = docopt(__doc__, version='1.0')
 
     input = file_or_def(args['<input>'], sys.stdin).read()
-
-    md = Markdown(extensions=MARKDOWN_EXTENSIONS)
-    content = md.convert(input)
-
-    meta = {k: yaml.load(v[0]) for k, v in md.Meta.items()}
-
-    if 'dir' not in meta:
-        if args['<input>']:
-            meta['dir'] = os.path.abspath(os.path.dirname(args['<input>']))
-        else:
-            meta['dir'] = os.getcwd()
+    input, meta = extract_meta(input)
 
     if 'extend' in meta and not meta['extend']:
         config_list = []
     else:
         config_list = resolve_config(args['--config'], args['<input>'])
 
-    config_list.append(meta)
+    config_list.append(resolve_meta(meta, args['<input>']))
     config = merge_config(config_list, parse_config)
+
+    # Extensions configuration
+    extensions = {k: [] for k in MARKDOWN_EXTENSIONS}
+
+    if 'header_level' in config:
+        extensions['headerid'].append(('level', config['header_level']))
+
+    if 'header_anchorlink' in config:
+        extensions['toc'].append(('anchorlink', config['header_anchorlink']))
+
+    if 'header_permalink' in config:
+        extensions['toc'].append(('permalink', config['header_permalink']))
+
+    if 'toc_title' in config:
+        extensions['toc'].append(('title', config['toc_title']))
+
+    content = markdown(input, extensions=MARKDOWN_EXTENSIONS,
+                       extension_configs=extensions,
+                       output_format='html5')
+
     config['content'] = content
 
     if 'title' not in config:
@@ -208,6 +246,9 @@ def main():
     if args['--layout']:
         config['layout'] = args['--layout']
     elif 'layout' not in config:
+        config['layout'] = None
+
+    if config['layout'] == 'default':
         config['layout'] = None
 
     layout = file_or_def_io(config['layout'], DEFAULT_LAYOUT).read()
