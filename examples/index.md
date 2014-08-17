@@ -3,6 +3,9 @@ Hello world!
 
 This Markdown file is rendered with [some extensions][extensions].
 
+If you watch this on GitHub, please look the raw Markdown, GitHub
+doesn't support some Markdown additions used here.
+
 [extensions]: https://pythonhosted.org/Markdown/extensions/
 
 ## Abbreviations
