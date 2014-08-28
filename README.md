@@ -58,7 +58,7 @@ Dependencies
 Installation
 ------------
 
-Just put the `md` standalone executable in your `PATH` after installing
+Just put the `bin/md` executable in your `PATH` after installing
 the required dependencies.
 
 Examples
