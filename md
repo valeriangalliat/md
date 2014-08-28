@@ -8,7 +8,7 @@ Arguments:
 Options:
   -h, --help       Show this screen.
   --version        Show version.
-  --config=<file>  Try to find a `.mdconfig` (recursing in parent
+  --config=<file>  Try to find a `.mdrc` (recursing in parent
                    directories) if not set.
   --layout=<file>  Layout file (will override configuration).
 '''
@@ -69,7 +69,7 @@ def resolve_parent_config(dir, config_list=None):
         return config_list
 
     try:
-        path = dir + '/.mdconfig'
+        path = dir + '/.mdrc'
         parent = yaml.load(open(path, 'r'))
         parent['_dir'] = os.path.dirname(path)
         config_list.insert(0, parent)
@@ -86,9 +86,9 @@ def resolve_config(config_file, markdown_file):
     '''Resolve configuration from context.
 
     If there is a `config_file`, read it and all the eventual parent
-    `.mdconfig` while `extend` is `True` to create the config object.
+    `.mdrc` while `extend` is `True` to create the config object.
 
-    Otherwise, try to find any parent `.mdconfig` of `markdown_file`
+    Otherwise, try to find any parent `.mdrc` of `markdown_file`
     with the same rules.
 
     If there is no `markdown_file` either, the CWD is used to search

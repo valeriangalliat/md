@@ -23,9 +23,9 @@ and below. It is not parsed with the [meta-data extension][meta-data].
 
 [meta-data]: https://pythonhosted.org/Markdown/extensions/meta_data.html
 
-A global configuration is a `.mdconfig` YAML file in the nearest
+A global configuration is a `.mdrc` YAML file in the nearest
 parent directory of the rendered file. `md` will search another parent
-`.mdconfig` and merge both files until `extend: false` is set, or the
+`.mdrc` and merge both files until `extend: false` is set, or the
 root is reached.
 
 ### Title

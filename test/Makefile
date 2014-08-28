@@ -17,18 +17,18 @@ all:
 	$(MD) --config config config.md | diff config-expected.html -
 	@echo
 
-	@echo ':: Find `.mdconfig` relative to file, use custom layout'
-	$(MD) mdconfig/test.md | diff mdconfig/test-expected.html -
+	@echo ':: Find `.mdrc` relative to file, use custom layout'
+	$(MD) mdrc/test.md | diff mdrc/test-expected.html -
 	@echo
 
-	@echo ':: Merge parent `.mdconfig`, layout relative to final `.mdconfig`'
-	$(MD) mdconfig/nested/test.md | diff mdconfig/nested/test-expected.html -
+	@echo ':: Merge parent `.mdrc`, layout relative to final `.mdrc`'
+	$(MD) mdrc/nested/test.md | diff mdrc/nested/test-expected.html -
 	@echo
 
-	@echo ':: Merge Markdown meta-data with `.mdconfig` and resolve layout'
-	$(MD) mdconfig/layout/test.md | diff mdconfig/layout/test-expected.html -
+	@echo ':: Merge Markdown meta-data with `.mdrc` and resolve layout'
+	$(MD) mdrc/layout/test.md | diff mdrc/layout/test-expected.html -
 	@echo
 
 	@echo ':: Do not extend if specified'
-	$(MD) mdconfig/extend/test.md | diff mdconfig/extend/test-expected.html -
+	$(MD) mdrc/extend/test.md | diff mdrc/extend/test-expected.html -
 	@echo

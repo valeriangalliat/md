@@ -1,8 +1,8 @@
 Nested directory
 ================
 
-The `.mdconfig` in this directory implicitely extends the parent
-`.mdconfig`, but disables the code syntax highlighting.
+The `.mdrc` in this directory implicitely extends the parent `.mdrc`, but
+disables the code syntax highlighting.
 
 ```python
 # Print an example

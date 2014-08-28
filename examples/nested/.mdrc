@@ -1,4 +1,4 @@
-# This file will extend its parent `.mdconfig`, but this can be disabled
+# This file will extend its parent `.mdrc`, but this can be disabled
 # extend: false
 
 # Disable syntax highlighting (set in parent)
