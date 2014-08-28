@@ -60,6 +60,16 @@ def resolve(config_file, input_file):
     return resolve_parent(os.path.dirname(config_file), [config])
 
 
+def deep_merge(src, dest):
+    for k, v in src.items():
+        if not isinstance(v, dict):
+            dest[k] = v
+        else:
+            deep_merge(v, dest.setdefault(k, {}))
+
+    return dest
+
+
 def merge(configs, parse=None):
     '''Merge a config list.
 
@@ -73,11 +83,19 @@ def merge(configs, parse=None):
         parse = lambda x: x
 
     # Convert each dict items to list for the `+` operator
-    config = list(parse(configs.pop(0)).items())
+    config = parse(configs.pop(0))
+    #config = list(parse(configs.pop(0)).items())
 
     for i in configs:
         # Add the next dict as a list
-        config += list(parse(i).items())
+        #config += list(parse(i).items())
+        for k, v in parse(i).items():
+            if k == 'extensions':
+                config[k] += v
+            elif k == 'extension_configs':
+                config[k] = deep_merge(v, config[k])
+            else:
+                config[k] = v
 
     # Build everything back to a dict
     return dict(config)

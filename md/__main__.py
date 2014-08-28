@@ -46,6 +46,22 @@ def fdefio(arg, default):
     return fdef(arg, StringIO(default))
 
 
+def config_proxy(config):
+    '''Generate a `kwargs` for `markdown` according to `config`.'''
+
+    kwargs = {}
+
+    def proxy(name):
+        if name in config:
+            kwargs[name] = config[name]
+
+    proxy('extensions')
+    proxy('extension_configs')
+    proxy('output_format')
+
+    return kwargs
+
+
 def main():
     args = docopt(__doc__, version=md.VERSION)
 
@@ -54,39 +70,15 @@ def main():
     input, meta = md.meta.extract(input, args['<input>'])
 
     config = md.config.find(args['--config'], args['<input>'], meta)
+    kwargs = config_proxy(config)
 
-    # Default extensions
-    extensions = [
-        'extra',
-        'headerid',
-        'smarty',
-        'toc',
-    ]
+    # Allow to disable an extension by setting its config to `False`
+    if 'extension_configs' in kwargs:
+        for k, v in kwargs['extension_configs'].items():
+            if not v:
+                kwargs['extensions'].remove(k)
 
-    if 'smarty' in config and not config['smarty']:
-        extensions.remove('smarty')
-
-    if 'codehilite' in config and config['codehilite']:
-        extensions.append('codehilite')
-
-    extension_configs = {k: [] for k in extensions}
-
-    def proxy(name, extension, extension_name):
-        if name in config and extension in extension_configs:
-            tuple = extension_name, config[name]
-            extension_configs[extension].append(tuple)
-
-    proxy('codehilite_linenums', 'codehilite', 'linenums')
-    proxy('header_level', 'headerid', 'level')
-    proxy('header_anchorlink', 'toc', 'anchorlink')
-    proxy('header_permalink', 'toc', 'permalink')
-    proxy('toc_title', 'toc', 'title')
-
-    content = markdown(input, extensions=extensions,
-                       extension_configs=extension_configs,
-                       output_format='html5')
-
-    config['content'] = content
+    config['content'] = markdown(input, **kwargs)
 
     if 'title' not in config:
         config['title'] = md.title.find(config['content'])
