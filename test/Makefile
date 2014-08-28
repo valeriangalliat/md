@@ -1,4 +1,4 @@
-MD = $(PWD)/../md
+MD = $(PWD)/../bin/md
 
 all:
 	@echo ':: Take input from `stdin`, finds title, use default layout'
