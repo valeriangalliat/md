@@ -1,6 +1,8 @@
+include common.mk
+
 MD = ../md
 
-MARKDOWNS = $(shell find . -name '*.md')
+MARKDOWNS = $(shell $(MARKDOWNS_COMMAND))
 HTMLS = ${MARKDOWNS:.md=.html}
 
 all: $(HTMLS)
