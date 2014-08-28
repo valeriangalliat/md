@@ -4,20 +4,31 @@ extend: false
 lang: en
 layout: layout.mustache
 
-# Highlight code blocks
-codehilite: true
+extensions:
+    # ID on headers
+    - headerid
 
-# Always display lines
-codehilite_linenums: true
+    # Highlight code blocks
+    - codehilite
 
-# Markdown headers will begin at level 2
-header_level: 2
+    # Table of contents
+    - toc
 
-# Headers links to themselves
-# header_anchorlink: true
+extension_configs:
+    headerid:
+        # Markdown headers will begin at level 2
+        level: 2
 
-# Add a permalink after headers (only on hover with current layout)
-header_permalink: true
+    codehilite:
+        # Always display lines
+        linenums: true
 
-# Title of the table of contents
-# toc_title: Custom title
+    toc:
+        # Headers links to themselves
+        # anchorlink: true
+
+        # Add a permalink after headers (on hover with current layout)
+        permalink: true
+
+        # Title of the table of contents
+        # title: Custom title

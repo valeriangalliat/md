@@ -1,3 +1,15 @@
+---
+extensions:
+    - extra
+    - headerid
+    - smarty
+    - toc
+
+extension_configs:
+    toc:
+        permalink: true
+---
+
 Hello world!
 ============
 

@@ -1,5 +1,6 @@
 # This file will extend its parent `.mdrc`, but this can be disabled
 # extend: false
 
-# Disable syntax highlighting (set in parent)
-codehilite: false
+extension_configs:
+    # Disable syntax highlighting (set in parent)
+    codehilite: false
