@@ -1,12 +1,12 @@
-`md`
-====
+md
+==
 
 > Advanced Markdown wrapper.
 
 Overview
 --------
 
-`md` is a wrapper around the Python `markdown` module and [extensions],
+md is a wrapper around the Python `markdown` module and [extensions],
 to add a layout around the rendered file, with different levels of
 configuration.
 
@@ -24,7 +24,7 @@ and below. It is not parsed with the [meta-data extension][meta-data].
 [meta-data]: https://pythonhosted.org/Markdown/extensions/meta_data.html
 
 A global configuration is a `.mdrc` YAML file in the nearest
-parent directory of the rendered file. `md` will search another parent
+parent directory of the rendered file. md will search another parent
 `.mdrc` and merge both files until `extend: false` is set, or the
 root is reached.
 
@@ -33,7 +33,7 @@ root is reached.
 The HTML `<title>` can be provided directly with a `title` configuration
 key in the Markdown meta-data, or even in the global configuration,
 
-If no title is found this way, `md` will parse the rendered HTML to
+If no title is found this way, md will parse the rendered HTML to
 search for the first header and use its content in `<title>`.
 
 ### Layout
